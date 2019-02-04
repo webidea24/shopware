@@ -1175,6 +1175,7 @@ class Order extends ModelEntity
     /**
      * The calculateInvoiceAmount function recalculated the net and gross amount based on the
      * order positions.
+     *
      * @deprecated
      */
     public function calculateInvoiceAmount()

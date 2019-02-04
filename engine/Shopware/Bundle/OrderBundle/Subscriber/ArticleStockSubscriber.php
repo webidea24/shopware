@@ -1,7 +1,28 @@
 <?php
+/**
+ * Shopware 5
+ * Copyright (c) shopware AG
+ *
+ * According to our dual licensing model, this program can be used either
+ * under the terms of the GNU Affero General Public License, version 3,
+ * or under a proprietary license.
+ *
+ * The texts of the GNU Affero General Public License with an additional
+ * permission and of our proprietary license can be found at and
+ * in the LICENSE file you have received along with this program.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * "Shopware" is a registered trademark of shopware AG.
+ * The licensing of the program under the AGPLv3 does not imply a
+ * trademark license. Therefore any rights, title and interest in
+ * our trademarks remain entirely with us.
+ */
 
 namespace Shopware\Bundle\OrderBundle\Subscriber;
-
 
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
@@ -10,7 +31,6 @@ use Shopware\Models\Order\Detail;
 
 class ArticleStockSubscriber implements EventSubscriber
 {
-    
     public function getSubscribedEvents()
     {
         return [
@@ -20,8 +40,9 @@ class ArticleStockSubscriber implements EventSubscriber
         ];
     }
 
-    public function preUpdate(LifecycleEventArgs $arguments) {
-        if($arguments->getObject() instanceof Detail === false) {
+    public function preUpdate(LifecycleEventArgs $arguments)
+    {
+        if ($arguments->getObject() instanceof Detail === false) {
             return; //nothing to do
         }
         /** @var Detail $detail */
@@ -82,16 +103,15 @@ class ArticleStockSubscriber implements EventSubscriber
             $article->setInStock($article->getInStock() + $quantityDiff);
             $entityManager->persist($article);
         }
-
     }
 
-    public function postPersist(LifecycleEventArgs $arguments) {
-        if($arguments->getObject() instanceof Detail === false) {
+    public function postPersist(LifecycleEventArgs $arguments)
+    {
+        if ($arguments->getObject() instanceof Detail === false) {
             return; //nothing to do
         }
         /** @var Detail $detail */
         $detail = $arguments->getObject();
-
 
         /*
          * before try to get the article, check if the association field (articleNumber) is not empty
@@ -109,8 +129,9 @@ class ArticleStockSubscriber implements EventSubscriber
         }
     }
 
-    public function preRemove(LifecycleEventArgs $arguments) {
-        if($arguments->getObject() instanceof Detail === false) {
+    public function preRemove(LifecycleEventArgs $arguments)
+    {
+        if ($arguments->getObject() instanceof Detail === false) {
             return; //nothing to do
         }
         /** @var Detail $detail */
@@ -132,6 +153,5 @@ class ArticleStockSubscriber implements EventSubscriber
             $article->setInStock($article->getInStock() + $detail->getQuantity());
             $entityManager->persist($article);
         }
-
     }
 }
