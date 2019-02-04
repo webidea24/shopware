@@ -1175,45 +1175,11 @@ class Order extends ModelEntity
     /**
      * The calculateInvoiceAmount function recalculated the net and gross amount based on the
      * order positions.
+     * @deprecated
      */
     public function calculateInvoiceAmount()
     {
-        $invoiceAmount = 0;
-        $invoiceAmountNet = 0;
-
-        // Iterate order details to recalculate the amount.
-        /** @var Detail $detail */
-        foreach ($this->getDetails() as $detail) {
-            $price = round($detail->getPrice(), 2);
-
-            $invoiceAmount += $price * $detail->getQuantity();
-
-            $tax = $detail->getTax();
-
-            $taxValue = $detail->getTaxRate();
-
-            // additional tax checks required for sw-2238, sw-2903 and sw-3164
-            if ($tax && $tax->getId() !== 0 && $tax->getId() !== null && $tax->getTax() !== null) {
-                $taxValue = $tax->getTax();
-            }
-
-            if ($this->net) {
-                $invoiceAmountNet += round(($price * $detail->getQuantity()) / 100 * (100 + $taxValue), 2);
-            } else {
-                $invoiceAmountNet += round(($price * $detail->getQuantity()) / (100 + $taxValue) * 100, 2);
-            }
-        }
-
-        if ($this->taxFree) {
-            $this->invoiceAmountNet = $invoiceAmount + $this->invoiceShippingNet;
-            $this->invoiceAmount = $this->invoiceAmountNet;
-        } elseif ($this->net) {
-            $this->invoiceAmountNet = $invoiceAmount + $this->invoiceShippingNet;
-            $this->invoiceAmount = $invoiceAmountNet + $this->invoiceShipping;
-        } else {
-            $this->invoiceAmount = $invoiceAmount + $this->invoiceShipping;
-            $this->invoiceAmountNet = $invoiceAmountNet + $this->invoiceShippingNet;
-        }
+        throw new \BadMethodCallException('Do not call this function. Please use the Service `shopware_order.service.calculation_service`');
     }
 
     /**
