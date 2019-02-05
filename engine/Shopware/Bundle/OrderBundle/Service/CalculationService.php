@@ -29,10 +29,13 @@ use Shopware\Models\Order\Order;
 
 class CalculationService
 {
+    /**
+     * recalculated the net and gross amount based on the order positions.
+     *
+     * @param Order $order the order which should be recalculated
+     */
     public function recalculateOrderTotals(Order $order)
     {
-        //$entityManager = Shopware()->Models(); // sorry we can't use DI cause the ModelsManager requires all Doctrine subscribers -> this class is injected by other subscribers
-
         $invoiceAmount = 0;
         $invoiceAmountNet = 0;
 
@@ -69,7 +72,5 @@ class CalculationService
             $order->setInvoiceAmount($invoiceAmount + $order->getInvoiceShipping());
             $order->setInvoiceAmountNet($invoiceAmountNet + $order->getInvoiceShippingNet());
         }
-
-        return $order;
     }
 }

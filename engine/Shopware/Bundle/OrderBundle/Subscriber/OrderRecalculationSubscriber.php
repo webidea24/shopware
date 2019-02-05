@@ -36,12 +36,20 @@ class OrderRecalculationSubscriber implements EventSubscriber
     /** @var CalculationService */
     protected $calculationService;
 
+    /**
+     * OrderRecalculationSubscriber constructor.
+     *
+     * @param CalculationService $calculationService
+     */
     public function __construct(
         CalculationService $calculationService
     ) {
         $this->calculationService = $calculationService;
     }
 
+    /**
+     * @return array
+     */
     public function getSubscribedEvents()
     {
         return [
@@ -51,6 +59,11 @@ class OrderRecalculationSubscriber implements EventSubscriber
         ];
     }
 
+    /**
+     * If a article position get updated, the order totals must be recalculated
+     *
+     * @param LifecycleEventArgs $arguments
+     */
     public function preUpdate(LifecycleEventArgs $arguments)
     {
         /* @var $order Order */
@@ -78,30 +91,44 @@ class OrderRecalculationSubscriber implements EventSubscriber
         }
     }
 
+    /**
+     * If a article position got added to the order, the order totals must be recalculated
+     *
+     * @param LifecycleEventArgs $arguments
+     */
     public function postPersist(LifecycleEventArgs $arguments)
     {
-        /* @var $order Order */
-        if ($arguments->getObject() instanceof Detail) {
-            /** @var Detail $orderDetail */
-            $orderDetail = $arguments->getObject();
-            $order = $orderDetail->getOrder();
-        } else {
+        if ($arguments->getObject() instanceof Detail === false) {
             return; //nothing to do
         }
+
+        /**
+         * @var Order
+         * @var Detail $orderDetail
+         */
+        $orderDetail = $arguments->getObject();
+        $order = $orderDetail->getOrder();
 
         $this->calculationService->recalculateOrderTotals($order);
     }
 
+    /**
+     * If a article position get removed from the order, the order totals must be recalculated
+     *
+     * @param LifecycleEventArgs $arguments
+     */
     public function preRemove(LifecycleEventArgs $arguments)
     {
-        /* @var $order Order */
-        if ($arguments->getObject() instanceof Detail) {
-            /** @var Detail $orderDetail */
-            $orderDetail = $arguments->getObject();
-            $order = $orderDetail->getOrder();
-        } else {
+        if ($arguments->getObject() instanceof Detail === false) {
             return; //nothing to do
         }
+
+        /**
+         * @var Order
+         * @var Detail $orderDetail
+         */
+        $orderDetail = $arguments->getObject();
+        $order = $orderDetail->getOrder();
 
         $this->calculationService->recalculateOrderTotals($order);
     }

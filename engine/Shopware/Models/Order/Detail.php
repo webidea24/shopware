@@ -603,6 +603,46 @@ class Detail extends ModelEntity
     }
 
     /**
+     * @ORM\PreRemove
+     */
+    public function afterRemove()
+    {
+        // the stock update logic has been moved to the service `shopware_bundle_order.subscriber.article_stock_subscriber` //TODO ist kein service! - das ist ein subscriber
+        // If you need to manually trigger the update please use the service.
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function beforeInsert()
+    {
+    }
+
+    /**
+     * @ORM\PostPersist
+     */
+    public function afterInsert()
+    {
+        // the stock update logic has been moved to the service `shopware_bundle_order.subscriber.article_stock_subscriber` //TODO ist kein service! - das ist ein subscriber
+        // If you need to manually trigger the update please use the service.
+
+        // the recalculation logic has been moved to the service `shopware_order.service.calculation_service`.
+        // if you need to manually trigger the recalculation please use the service.
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function beforeUpdate()
+    {
+        // the stock update logic has been moved to the service `shopware_bundle_order.subscriber.article_stock_subscriber` //TODO ist kein service! - das ist ein subscriber
+        // If you need to manually trigger the update please use the service.
+
+        // the recalculation logic has been moved to the service `shopware_order.service.calculation_service`.
+        // if you need to manually trigger the recalculation please use the service.
+    }
+
+    /**
      * @return \Shopware\Models\Attribute\OrderDetail
      */
     public function getAttribute()

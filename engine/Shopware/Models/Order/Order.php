@@ -27,6 +27,7 @@ namespace Shopware\Models\Order;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Shopware\Bundle\OrderBundle\Service\CalculationService;
 use Shopware\Components\Model\ModelEntity;
 use Shopware\Components\Security\AttributeCleanerTrait;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -1176,11 +1177,13 @@ class Order extends ModelEntity
      * The calculateInvoiceAmount function recalculated the net and gross amount based on the
      * order positions.
      *
-     * @deprecated
+     * @deprecated Please use the service `shopware_order.service.calculation_service`.
      */
     public function calculateInvoiceAmount()
     {
-        throw new \BadMethodCallException('Do not call this function. Please use the Service `shopware_order.service.calculation_service`');
+        /** @var CalculationService $service */
+        $service = Shopware()->Container()->get('shopware_order.service.calculation_service');
+        $service->recalculateOrderTotals($this);
     }
 
     /**
