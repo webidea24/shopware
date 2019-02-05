@@ -119,7 +119,7 @@ class StockService
      */
     protected function getArticleFromDetail(Detail $detail)
     {
-        return (in_array($detail->getMode(), [0, 1]) && $detail->getArticleNumber()) ? $detail->getArticleDetail() : null;
+        return (in_array($detail->getMode(), [0, 1], true) && $detail->getArticleNumber()) ? $detail->getArticleDetail() : null;
     }
 
     /**
